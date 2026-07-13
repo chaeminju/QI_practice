@@ -1,0 +1,26 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+backend/app/data/dummy_vehicles.csv
+
+# Node
+node_modules/
+frontend/dist/
+npm-debug.log*
+*.tsbuildinfo
+
+# Generated dummy assets (regenerated automatically on backend startup)
+sample_data/*.stl
+sample_data/manifest.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
