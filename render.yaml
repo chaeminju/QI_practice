@@ -10,3 +10,5 @@ services:
         value: 3.12.7
       - key: VITE_API_BASE
         value: ""
+      - key: DATABASE_URL
+        sync: false

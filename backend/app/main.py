@@ -3,9 +3,11 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 
 from app.data.generate_dummy_dataset import generate_dummy_dataset
 from app.data.generate_samples import generate_samples
+from app.db import engine
 from app.routers import benchmark, predict, samples
 
 app = FastAPI(title="CFA - Car Fluid Analyzer API (dummy)")
@@ -33,7 +35,15 @@ def _ensure_dummy_assets():
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "mode": "dummy-data"}
+    db_status = "unconfigured"
+    if engine is not None:
+        try:
+            with engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            db_status = "ok"
+        except Exception:
+            db_status = "error"
+    return {"status": "ok", "mode": "dummy-data", "db": db_status}
 
 
 app.include_router(samples.router)
