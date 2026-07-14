@@ -1,8 +1,10 @@
 import type { BenchmarkResponse, PredictResult, SampleMeta } from './types'
 
-const rawBase = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
-// Render 블루프린트의 fromService(property: host)는 스킴 없는 호스트만 넘겨주므로 보정한다.
-const API_BASE = rawBase.startsWith('http') ? rawBase : `https://${rawBase}`
+// 배포 시(Render 단일 Web Service)는 FastAPI가 프론트엔드 빌드를 같은 오리진에서
+// 서빙하므로 VITE_API_BASE=""(빈 문자열)로 두면 상대경로("/api/...")로 호출된다.
+// 로컬 개발(frontend 5173 / backend 8000 분리 실행)에서는 env 미설정 시 localhost로 fallback.
+const rawBase = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000'
+const API_BASE = rawBase === '' || rawBase.startsWith('http') ? rawBase : `https://${rawBase}`
 
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
